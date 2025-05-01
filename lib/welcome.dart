@@ -36,7 +36,7 @@ class Welcome extends StatelessWidget
                     children: [
                       // Headline
                       Text(
-                        "Todo List",
+                        "To-Do List",
 
                         style: TextStyle(
                           fontSize: 50,
