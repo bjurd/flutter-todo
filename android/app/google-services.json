@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "443236752645",
+    "project_id": "flutter-todo-eace4",
+    "storage_bucket": "flutter-todo-eace4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:443236752645:android:f546cfa3128c4aa708ab6c",
+        "android_client_info": {
+          "package_name": "com.bjurd.todo.todo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCf_ow3-xHSn9k4EQZROiHeB_RkyQ9nYws"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
