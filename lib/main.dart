@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 import "welcome.dart";
+import "signup.dart";
 
 void main() async
 {
@@ -14,6 +15,12 @@ void main() async
   );
 
   runApp(MaterialApp(
-    home: Welcome(),
+    initialRoute: "/",
+
+    routes:
+    {
+      "/": (context) => Welcome(),
+      "/signup": (context) => SignUp(),
+    }
   ));
 }
