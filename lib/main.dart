@@ -7,6 +7,7 @@ import 'firebase_options.dart';
 import 'package:todo/welcome.dart';
 import 'package:todo/signup.dart';
 import 'package:todo/login.dart';
+import 'package:todo/projects.dart';
 
 void main() async
 {
@@ -27,7 +28,8 @@ void main() async
     {
       "/": (context) => Welcome(),
       "/signup": (context) => SignUp(),
-      "/login": (context) => Login()
+      "/login": (context) => Login(),
+      "/home": (context) => Projects(),
     }
   ));
 }
