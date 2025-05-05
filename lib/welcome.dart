@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import "buttons.dart";
+import 'package:todo/buttons.dart';
 
 class Welcome extends StatelessWidget
 {
