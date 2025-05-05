@@ -33,10 +33,130 @@ class Projects extends StatefulWidget
 
 class ProjectsState extends State<Projects>
 {
+  final _formKey = GlobalKey<FormState>();
+
+  final _controllerProjectName = TextEditingController();
+
   @override
   Widget build(BuildContext context)
   {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: ()
+        {
+          showDialog(
+            context: context,
+
+            builder: (context)
+            {
+              return Dialog(
+                child: Padding(
+                  padding: EdgeInsets.all(20),
+
+                  child: Form(
+                    key: _formKey,
+
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+
+                      spacing: 10,
+
+                      children: [
+                        // Project name input
+                        TextFormField(
+                          controller: _controllerProjectName,
+
+                          decoration: InputDecoration(
+                            hintText: "Enter the project name",
+                          ),
+
+                          validator: (value)
+                          {
+                            if (value == null || value.isEmpty)
+                            {
+                              return "Please enter a project name";
+                            }
+
+                            return null;
+                          },
+                        ),
+
+                        // Action buttons
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+
+                          spacing: 10,
+
+                          children: [
+                            // Cancel button
+                            ElevatedButton(
+                              onPressed: ()
+                              {
+                                // Clear form
+                                _formKey.currentState?.reset();
+
+                                // Remove popup
+                                Navigator.pop(context);
+                              },
+
+                              child: Text("Cancel"),
+                            ),
+
+                            // Add button
+                            ElevatedButton(
+                              onPressed: ()
+                              {
+                                if (_formKey.currentState == null)
+                                {
+                                  print("_formKey.currentState is null");
+                                  return;
+                                }
+
+                                // Fails validation
+                                if (!_formKey.currentState!.validate())
+                                {
+                                  print("Failed validation");
+
+                                  _formKey.currentState!.save();
+
+                                  return;
+                                }
+
+                                // Succcess -- add to list of projects
+                                projects.add(Project.fromMap({
+                                  "name": _controllerProjectName.text,
+                                  "numOfTasks": 0
+                                }));
+
+                                // Clear form
+                                _formKey.currentState?.reset();
+
+                                setState(() {});
+
+                                // Remove popup
+                                Navigator.pop(context);
+                              },
+
+                              child: Text("Add")
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }
+          );
+        },
+
+        shape: CircleBorder(),
+
+        child: Icon(
+          Icons.add,
+        ),
+      ),
+
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.only(
