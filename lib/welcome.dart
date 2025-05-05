@@ -62,46 +62,44 @@ class Welcome extends StatelessWidget
               ),
 
               // Buttons
-              Container(
-                child: Column(
-                  spacing: 10,
-                  children: [
-                    // Sign up button
-                    PrimaryButton(
-                      text: "Get Started",
-                      onPressed: ()
-                      {
-                        Navigator.pushNamed(context, "/signup");
-                      },
-                    ),
+              Column(
+                spacing: 10,
+                children: [
+                  // Sign up button
+                  PrimaryButton(
+                    text: "Get Started",
+                    onPressed: ()
+                    {
+                      Navigator.pushNamed(context, "/signup");
+                    },
+                  ),
 
-                    // Login section
-                    Text.rich(
-                      TextSpan(
-                        text: "Already have an account? ",
+                  // Login section
+                  Text.rich(
+                    TextSpan(
+                      text: "Already have an account? ",
 
-                        style: TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 18),
 
-                        // Login link
-                        children: [
-                          TextSpan(
-                            text: 'Login',
+                      // Login link
+                      children: [
+                        TextSpan(
+                          text: 'Login',
 
-                            style: TextStyle(
-                              decoration: TextDecoration.underline,
-                            ),
-
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = ()
-                              {
-                                Navigator.pushNamed(context, '/login');
-                              },
+                          style: TextStyle(
+                            decoration: TextDecoration.underline,
                           ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
+
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = ()
+                            {
+                              Navigator.pushNamed(context, '/login');
+                            },
+                        ),
+                      ],
+                    ),
+                  )
+                ],
               ),
             ],
           ),
