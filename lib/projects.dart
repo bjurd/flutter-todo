@@ -41,6 +41,17 @@ class ProjectsState extends State<Projects>
   Widget build(BuildContext context)
   {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Projects",
+
+          style: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: ()
         {
@@ -170,16 +181,6 @@ class ProjectsState extends State<Projects>
             spacing: 10,
 
             children: [
-              // Header
-              Text(
-                "Projects",
-
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-
               Expanded(
                 child: ListView.builder(
                   itemCount: projects.length,
