@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import "./forms.dart";
+import 'package:todo/forms.dart';
 
 class SignUp extends StatelessWidget
 {
