@@ -344,7 +344,11 @@ class LoginForm extends StatefulWidget
 class LoginFormState extends State<LoginForm>
 {
   final _formKey = GlobalKey<FormState>();
-  
+
+
+  final _controllerEmail = TextEditingController();
+  final _controllerPassword = TextEditingController();
+
   @override
   Widget build(BuildContext context)
   {
