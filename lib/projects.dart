@@ -50,6 +50,14 @@ class ProjectsState extends State<Projects>
             fontWeight: FontWeight.w600,
           ),
         ),
+
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+
+            onPressed: () {},
+          ),
+        ],
       ),
 
       floatingActionButton: FloatingActionButton(
