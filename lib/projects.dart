@@ -1,29 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:todo/project.dart';
 
-List<Map<String, dynamic>> projects = [
-  {
-    "icon": Icons.circle,
+List projects = [
+  Project.fromMap({
     "name": "UX Design",
     "numOfTasks": 2
-  },
+  }),
 
-  {
-    "icon": Icons.circle,
+  Project.fromMap({
     "name": "BCCB Bot",
     "numOfTasks": 2
-  },
+  }),
 
-  {
-    "icon": Icons.person,
+  Project.fromMap({
     "name": "Multivendor project",
     "numOfTasks": 13
-  },
+  }),
 
-  {
-    "icon": Icons.circle,
+  Project.fromMap({
     "name": "PS5",
     "numOfTasks": 58
-  },
+  }),
 ];
 
 class Projects extends StatefulWidget
@@ -83,20 +80,15 @@ class ProjectsState extends State<Projects>
                         ),
 
                         child: ListTile(
-                          leading: Icon(
-                            projects[i]["icon"],
-                            size: 26,
-                          ),
-
                           title: Text(
-                            projects[i]["name"],
+                            projects[i].name,
                             style: TextStyle(
                               fontSize: 20,
                             ),
                           ),
 
                           trailing: Text(
-                            projects[i]["numOfTasks"].toString(),
+                            projects[i].numOfTasks.toString(),
 
                             style: TextStyle(
                               fontSize: 20,
