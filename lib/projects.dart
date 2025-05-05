@@ -3,28 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:todo/project.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
-
-List projects = [
-  Project.fromMap({
-    "name": "UX Design",
-    "numOfTasks": 2
-  }),
-
-  Project.fromMap({
-    "name": "BCCB Bot",
-    "numOfTasks": 2
-  }),
-
-  Project.fromMap({
-    "name": "Multivendor project",
-    "numOfTasks": 13
-  }),
-
-  Project.fromMap({
-    "name": "PS5",
-    "numOfTasks": 58
-  }),
-];
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Projects extends StatefulWidget
 {
@@ -148,11 +127,13 @@ class ProjectsState extends State<Projects>
                                   return;
                                 }
 
-                                // Succcess -- add to list of projects
-                                projects.add(Project.fromMap({
-                                  "name": _controllerProjectName.text,
-                                  "numOfTasks": 0
-                                }));
+                                // Success -- add to list of projects
+                                FirebaseFirestore.instance
+                                    .collection("projects")
+                                    .add({
+                                      "name": _controllerProjectName.text,
+                                      "userId": FirebaseAuth.instance.currentUser!.uid
+                                    });
 
                                 // Clear form
                                 _formKey.currentState?.reset();
@@ -197,45 +178,55 @@ class ProjectsState extends State<Projects>
 
             children: [
               Expanded(
-                child: ListView.builder(
-                  itemCount: projects.length,
+                child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                    .collection("projects")
+                    .where(
+                      "userId",
+                      isEqualTo: FirebaseAuth.instance.currentUser!.uid
+                    ).snapshots(),
 
-                  itemBuilder: (BuildContext context, int i)
+                  builder: (context, snapshot)
                   {
-                    return Padding(
-                      padding: EdgeInsets.only(
-                        bottom: 10,
-                      ),
+                    if (!snapshot.hasData)
+                      return Text("FUCUUUUUUUU");
 
-                      child: Card(
-                        color: Colors.white,
-                        shadowColor: Colors.orange,
+                    List<Widget> shit = [];
 
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
+                    for (DocumentSnapshot project in snapshot.data!.docs)
+                    {
+                      shit.add(Padding(
+                        padding: EdgeInsets.only(
+                          bottom: 10,
                         ),
 
-                        child: ListTile(
-                          title: Text(
-                            projects[i].name,
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
+                        child: Card(
+                          color: Colors.white,
+                          shadowColor: Colors.orange,
+
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
                           ),
 
-                          trailing: Text(
-                            projects[i].numOfTasks.toString(),
-
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.grey,
+                          child: ListTile(
+                            title: Text(
+                              project["name"],
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
                             ),
+
+                            trailing: Icon(Icons.arrow_forward)
                           ),
                         ),
-                      ),
+                      ));
+                    }
+
+                    return ListView(
+                      children: shit
                     );
-                  },
-                ),
+                  }
+                )
               ),
             ],
           ) ,
