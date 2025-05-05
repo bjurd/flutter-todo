@@ -1,7 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import "buttons.dart";
+import 'package:todo/buttons.dart';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'firebase_options.dart';
 
 class FormFieldLabel extends StatelessWidget
 {
@@ -131,6 +135,7 @@ class SignUpForm extends StatefulWidget
 class SignUpFormState extends State<SignUpForm>
 {
   final _formKey = GlobalKey<FormState>();
+  final _controllerEmail = TextEditingController();
   final _controllerPassword = TextEditingController();
   final _controllerPasswordConfirm = TextEditingController();
 
@@ -148,30 +153,6 @@ class SignUpFormState extends State<SignUpForm>
         spacing: 20,
 
         children: [
-
-          // Username / Email
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-
-            children: [
-              FormFieldLabel(labelText: "Username"),
-              SizedBox(height: 4),
-              FormFieldInput(
-                  hintText: "Enter your username",
-
-                  validator: (value)
-                  {
-                    if (value == null || value.isEmpty)
-                    {
-                      return "Please enter a username";
-                    }
-
-                    return null;
-                  }
-              ),
-            ],
-          ),
-
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
 
@@ -180,6 +161,8 @@ class SignUpFormState extends State<SignUpForm>
               SizedBox(height: 4),
               FormFieldInput(
                 hintText: "Enter your email address",
+
+                controller: _controllerEmail,
 
                 validator: (value)
                 {
@@ -267,17 +250,15 @@ class SignUpFormState extends State<SignUpForm>
           PrimaryButton(
             text: "Sign Up",
 
-            onPressed: ()
+            onPressed: () async
             {
               if (_formKey.currentState == null)
               {
-                print("_formKey.currentState is null");
                 return;
               }
 
               if (!_formKey.currentState!.validate())
               {
-                print("Failed validation");
                 return;
               }
 
@@ -295,6 +276,13 @@ class SignUpFormState extends State<SignUpForm>
 
                 return;
               }
+
+              UserCredential creds = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                  email: _controllerEmail.text,
+                  password: password
+              );
+
+              print(creds);
 
               // Success
               Navigator.pushNamed(
