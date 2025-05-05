@@ -443,7 +443,7 @@ class LoginFormState extends State<LoginForm>
 
                 return;
               }
-              
+
               await FirebaseAuth.instance.signInWithEmailAndPassword(
                 email: _controllerEmail.text,
                 password: _controllerPassword.text
