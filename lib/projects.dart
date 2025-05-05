@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todo/project.dart';
 
@@ -55,7 +56,11 @@ class ProjectsState extends State<Projects>
           IconButton(
             icon: Icon(Icons.logout),
 
-            onPressed: () {},
+            onPressed: ()
+            {
+              FirebaseAuth.instance.signOut();
+              Navigator.pushNamedAndRemoveUntil(context, "/", (r) => false);
+            },
           ),
         ],
       ),
