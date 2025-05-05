@@ -1,29 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:todo/project.dart';
 
-List<Map<String, dynamic>> projects = [
-  {
-    "icon": Icons.circle,
+List projects = [
+  Project.fromMap({
     "name": "UX Design",
     "numOfTasks": 2
-  },
+  }),
 
-  {
-    "icon": Icons.circle,
+  Project.fromMap({
     "name": "BCCB Bot",
     "numOfTasks": 2
-  },
+  }),
 
-  {
-    "icon": Icons.person,
+  Project.fromMap({
     "name": "Multivendor project",
     "numOfTasks": 13
-  },
+  }),
 
-  {
-    "icon": Icons.circle,
+  Project.fromMap({
     "name": "PS5",
     "numOfTasks": 58
-  },
+  }),
 ];
 
 class Projects extends StatefulWidget
@@ -36,10 +33,130 @@ class Projects extends StatefulWidget
 
 class ProjectsState extends State<Projects>
 {
+  final _formKey = GlobalKey<FormState>();
+
+  final _controllerProjectName = TextEditingController();
+
   @override
   Widget build(BuildContext context)
   {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: ()
+        {
+          showDialog(
+            context: context,
+
+            builder: (context)
+            {
+              return Dialog(
+                child: Padding(
+                  padding: EdgeInsets.all(20),
+
+                  child: Form(
+                    key: _formKey,
+
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+
+                      spacing: 10,
+
+                      children: [
+                        // Project name input
+                        TextFormField(
+                          controller: _controllerProjectName,
+
+                          decoration: InputDecoration(
+                            hintText: "Enter the project name",
+                          ),
+
+                          validator: (value)
+                          {
+                            if (value == null || value.isEmpty)
+                            {
+                              return "Please enter a project name";
+                            }
+
+                            return null;
+                          },
+                        ),
+
+                        // Action buttons
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+
+                          spacing: 10,
+
+                          children: [
+                            // Cancel button
+                            ElevatedButton(
+                              onPressed: ()
+                              {
+                                // Clear form
+                                _formKey.currentState?.reset();
+
+                                // Remove popup
+                                Navigator.pop(context);
+                              },
+
+                              child: Text("Cancel"),
+                            ),
+
+                            // Add button
+                            ElevatedButton(
+                              onPressed: ()
+                              {
+                                if (_formKey.currentState == null)
+                                {
+                                  print("_formKey.currentState is null");
+                                  return;
+                                }
+
+                                // Fails validation
+                                if (!_formKey.currentState!.validate())
+                                {
+                                  print("Failed validation");
+
+                                  _formKey.currentState!.save();
+
+                                  return;
+                                }
+
+                                // Succcess -- add to list of projects
+                                projects.add(Project.fromMap({
+                                  "name": _controllerProjectName.text,
+                                  "numOfTasks": 0
+                                }));
+
+                                // Clear form
+                                _formKey.currentState?.reset();
+
+                                setState(() {});
+
+                                // Remove popup
+                                Navigator.pop(context);
+                              },
+
+                              child: Text("Add")
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }
+          );
+        },
+
+        shape: CircleBorder(),
+
+        child: Icon(
+          Icons.add,
+        ),
+      ),
+
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.only(
@@ -83,20 +200,15 @@ class ProjectsState extends State<Projects>
                         ),
 
                         child: ListTile(
-                          leading: Icon(
-                            projects[i]["icon"],
-                            size: 26,
-                          ),
-
                           title: Text(
-                            projects[i]["name"],
+                            projects[i].name,
                             style: TextStyle(
                               fontSize: 20,
                             ),
                           ),
 
                           trailing: Text(
-                            projects[i]["numOfTasks"].toString(),
+                            projects[i].numOfTasks.toString(),
 
                             style: TextStyle(
                               fontSize: 20,
