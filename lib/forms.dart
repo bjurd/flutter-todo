@@ -32,10 +32,10 @@ class FormFieldInput extends StatefulWidget
   final bool? obscureText;
   final Widget? suffixIcon;
 
-  FormFieldValidator<String>? validator;
-  TextEditingController? controller;
+  final FormFieldValidator<String>? validator;
+  final TextEditingController? controller;
 
-  FormFieldInput({
+  const FormFieldInput({
     super.key,
     this.hintText,
     this.obscureText,
