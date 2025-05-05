@@ -344,7 +344,7 @@ class LoginForm extends StatefulWidget
 class LoginFormState extends State<LoginForm>
 {
   final _formKey = GlobalKey<FormState>();
-
+  
   @override
   Widget build(BuildContext context)
   {
@@ -358,21 +358,23 @@ class LoginFormState extends State<LoginForm>
 
         children: [
 
-          // Username / Email
+          // Email
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
 
             children: [
-              FormFieldLabel(labelText: "Username or Email"),
+              FormFieldLabel(labelText: "Email"),
               SizedBox(height: 4),
               FormFieldInput(
-                  hintText: "Enter your username or email",
+                  hintText: "Enter your email",
+
+                  controller: _controllerEmail,
 
                   validator: (value)
                   {
                     if (value == null || value.isEmpty)
                     {
-                      return "Please enter a username or email";
+                      return "Please enter your email";
                     }
 
                     return null;
@@ -393,11 +395,13 @@ class LoginFormState extends State<LoginForm>
                   hintText: "Enter your password",
                   obscureText: true,
 
+                  controller: _controllerPassword,
+
                   validator: (value)
                   {
                     if (value == null || value.isEmpty)
                     {
-                      return "Please enter a password";
+                      return "Please enter your password";
                     }
 
                     return null;
