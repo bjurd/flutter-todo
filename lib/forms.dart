@@ -280,8 +280,6 @@ class SignUpFormState extends State<SignUpForm>
                   password: password
               );
 
-              print(creds);
-
               // Success
               Navigator.pushNamed(
                 context,
@@ -448,10 +446,12 @@ class LoginFormState extends State<LoginForm>
               );
 
               // Success
-              Navigator.pushNamed(
-                  context,
-                  "/home"
-              );
+              FirebaseAuth.instance.signOut();
+              Navigator.pushNamedAndRemoveUntil(context, "/home", (r) => false);
+              // Navigator.pushNamed(
+              //     context,
+              //     "/home"
+              // );
             },
           ),
 
