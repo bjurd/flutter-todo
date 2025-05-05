@@ -344,8 +344,6 @@ class LoginForm extends StatefulWidget
 class LoginFormState extends State<LoginForm>
 {
   final _formKey = GlobalKey<FormState>();
-
-
   final _controllerEmail = TextEditingController();
   final _controllerPassword = TextEditingController();
 
@@ -431,23 +429,25 @@ class LoginFormState extends State<LoginForm>
           PrimaryButton(
             text: "Login",
 
-            onPressed: ()
+            onPressed: () async
             {
               if (_formKey.currentState == null)
               {
-                print("_formKey.currentState is null");
                 return;
               }
 
               // Fails validation
               if (!_formKey.currentState!.validate())
               {
-                print("Failed validation");
-
                 _formKey.currentState!.save();
 
                 return;
               }
+              
+              await FirebaseAuth.instance.signInWithEmailAndPassword(
+                email: _controllerEmail.text,
+                password: _controllerPassword.text
+              );
 
               // Success
               Navigator.pushNamed(
