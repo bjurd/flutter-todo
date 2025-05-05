@@ -150,116 +150,108 @@ class SignUpFormState extends State<SignUpForm>
         children: [
 
           // Username / Email
-          Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
 
-                children: [
-                  FormFieldLabel(labelText: "Username"),
-                  SizedBox(height: 4),
-                  FormFieldInput(
-                      hintText: "Enter your username",
-
-                      validator: (value)
-                      {
-                        if (value == null || value.isEmpty)
-                        {
-                          return "Please enter a username";
-                        }
-
-                        return null;
-                      }
-                  ),
-                ],
-              )
-          ),
-
-          Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-
-              children: [
-                FormFieldLabel(labelText: "Email"),
-                SizedBox(height: 4),
-                FormFieldInput(
-                  hintText: "Enter your email address",
+            children: [
+              FormFieldLabel(labelText: "Username"),
+              SizedBox(height: 4),
+              FormFieldInput(
+                  hintText: "Enter your username",
 
                   validator: (value)
                   {
                     if (value == null || value.isEmpty)
                     {
-                      return "Please enter an email address";
-                    }
-
-                    String pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$';
-                    RegExp regex = RegExp(pattern);
-
-                    if (!regex.hasMatch(value))
-                    {
-                      return "Please enter a valid email";
+                      return "Please enter a username";
                     }
 
                     return null;
-                  },
-                ),
-              ],
-            ),
+                  }
+              ),
+            ],
+          ),
+
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+
+            children: [
+              FormFieldLabel(labelText: "Email"),
+              SizedBox(height: 4),
+              FormFieldInput(
+                hintText: "Enter your email address",
+
+                validator: (value)
+                {
+                  if (value == null || value.isEmpty)
+                  {
+                    return "Please enter an email address";
+                  }
+
+                  String pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$';
+                  RegExp regex = RegExp(pattern);
+
+                  if (!regex.hasMatch(value))
+                  {
+                    return "Please enter a valid email";
+                  }
+
+                  return null;
+                },
+              ),
+            ],
           ),
 
           // Password
-          Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
 
-              children: [
-                FormFieldLabel(labelText: "Password"),
-                SizedBox(height: 4),
-                FormFieldInput(
-                    hintText: "Enter your password",
-                    obscureText: true,
+            children: [
+              FormFieldLabel(labelText: "Password"),
+              SizedBox(height: 4),
+              FormFieldInput(
+                  hintText: "Enter your password",
+                  obscureText: true,
 
-                    controller: _controllerPassword,
+                  controller: _controllerPassword,
 
-                    validator: (value)
+                  validator: (value)
+                  {
+                    if (value == null || value.isEmpty)
                     {
-                      if (value == null || value.isEmpty)
-                      {
-                        return "Please enter a username";
-                      }
-
-                      return null;
+                      return "Please enter a username";
                     }
-                ),
-              ],
-            ),
+
+                    return null;
+                  }
+              ),
+            ],
           ),
 
           // Password confirmation
-          Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
 
-              children: [
-                FormFieldLabel(labelText: "Confirm Password"),
-                SizedBox(height: 4),
-                FormFieldInput(
-                    hintText: "Enter your password again",
-                    obscureText: true,
+            children: [
+              FormFieldLabel(labelText: "Confirm Password"),
+              SizedBox(height: 4),
+              FormFieldInput(
+                  hintText: "Enter your password again",
+                  obscureText: true,
 
-                    controller: _controllerPasswordConfirm,
+                  controller: _controllerPasswordConfirm,
 
-                    validator: (value)
+                  validator: (value)
+                  {
+                    if (value == null || value.isEmpty)
                     {
-                      if (value == null || value.isEmpty)
-                      {
-                        return "Please enter a username";
-                      }
-
-                      return null;
+                      return "Please enter a username";
                     }
-                ),
-              ],
-            ),
+
+                    return null;
+                  }
+              ),
+            ],
           ),
 
           // Error Message
@@ -379,68 +371,64 @@ class LoginFormState extends State<LoginForm>
         children: [
 
           // Username / Email
-          Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
 
-                children: [
-                  FormFieldLabel(labelText: "Username or Email"),
-                  SizedBox(height: 4),
-                  FormFieldInput(
-                      hintText: "Enter your username or email",
+            children: [
+              FormFieldLabel(labelText: "Username or Email"),
+              SizedBox(height: 4),
+              FormFieldInput(
+                  hintText: "Enter your username or email",
 
-                      validator: (value)
-                      {
-                        if (value == null || value.isEmpty)
-                        {
-                          return "Please enter a username or email";
-                        }
+                  validator: (value)
+                  {
+                    if (value == null || value.isEmpty)
+                    {
+                      return "Please enter a username or email";
+                    }
 
-                        return null;
-                      }
-                  ),
-                ],
-              )
+                    return null;
+                  }
+              ),
+            ],
           ),
 
           // Password
-          Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
 
-              children: [
-                // Password field
-                FormFieldLabel(labelText: "Password"),
-                SizedBox(height: 4),
-                FormFieldInput(
-                    hintText: "Enter your password",
-                    obscureText: true,
+            children: [
+              // Password field
+              FormFieldLabel(labelText: "Password"),
+              SizedBox(height: 4),
+              FormFieldInput(
+                  hintText: "Enter your password",
+                  obscureText: true,
 
-                    validator: (value)
+                  validator: (value)
+                  {
+                    if (value == null || value.isEmpty)
                     {
-                      if (value == null || value.isEmpty)
-                      {
-                        return "Please enter a password";
-                      }
-
-                      return null;
+                      return "Please enter a password";
                     }
+
+                    return null;
+                  }
+              ),
+
+              // Forget Password
+              Container(
+                width: double.infinity,
+
+                margin: EdgeInsets.only(top: 10.0),
+
+                child: Text(
+                  "Forget Password?",
+
+                  textAlign: TextAlign.right,
                 ),
-
-                // Forget Password
-                Container(
-                  width: double.infinity,
-
-                  margin: EdgeInsets.only(top: 10.0),
-
-                  child: Text(
-                    "Forget Password?",
-
-                    textAlign: TextAlign.right,
-                  ),
-                )
-              ],
-            ),
+              )
+            ],
           ),
 
           // Submit
