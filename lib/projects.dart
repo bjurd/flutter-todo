@@ -231,8 +231,18 @@ class ProjectsState extends State<Projects>
                                     ),
 
                                     // Delete button
-                                    Icon(
-                                      Icons.delete
+                                    GestureDetector(
+                                      onTap: ()
+                                      {
+                                        FirebaseFirestore.instance
+                                          .collection("projects")
+                                          .doc(project.id)
+                                          .delete();
+                                      },
+
+                                      child: Icon(
+                                        Icons.delete
+                                      ),
                                     ),
                                   ],
                                 ),
