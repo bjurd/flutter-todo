@@ -95,7 +95,7 @@ class _TasksState extends State<Tasks>
 
                         // Task description input
                         TextFormField(
-                          controller: _controllerTaskName,
+                          controller: _controllerTaskDescription,
 
                           decoration: InputDecoration(
                             hintText: "Enter the description for this task",
