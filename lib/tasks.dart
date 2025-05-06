@@ -283,7 +283,7 @@ class TasksState extends State<Tasks>
                       ),
 
                       child: ListTile(
-                        leading: TaskCheckBox(),
+                        leading: TaskCheckBox(task: task),
 
                         title: Text(task["name"]),
 
@@ -488,6 +488,13 @@ class TasksState extends State<Tasks>
 
 class TaskCheckBox extends StatefulWidget
 {
+  DocumentSnapshot task;
+
+  TaskCheckBox({
+    super.key,
+    required this.task
+  });
+
   @override
   State<TaskCheckBox> createState() => _TaskCheckBoxState();
 }
@@ -495,6 +502,7 @@ class TaskCheckBox extends StatefulWidget
 class _TaskCheckBoxState extends State<TaskCheckBox>
 {
   bool _isChecked = false;
+
 
   @override
   Widget build(BuildContext context)
@@ -507,6 +515,10 @@ class _TaskCheckBoxState extends State<TaskCheckBox>
       onChanged: (bool? value)
       {
         _isChecked = value!;
+
+        FirebaseFirestore.instance.collection("tasks").doc(widget.task.id).update({
+          "completed": _isChecked
+        });
 
         setState(() {});
       },
