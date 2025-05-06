@@ -168,223 +168,223 @@ class ProjectsState extends State<Projects>
             left: 20,
             right: 20,
           ),
-
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-
-            spacing: 10,
-
             children: [
               Expanded(
                 child: StreamBuilder(
                   stream: FirebaseFirestore.instance
-                    .collection("projects")
-                    .where(
-                      "userId",
-                      isEqualTo: FirebaseAuth.instance.currentUser!.uid
-                    ).snapshots(),
+                            .collection("projects")
+                            .where(
+                              "userId",
+                              isEqualTo: FirebaseAuth.instance.currentUser!.uid,
+                            )
+                            .snapshots(),
 
                   builder: (context, snapshot)
                   {
                     if (!snapshot.hasData)
-                      return Text("FUCUUUUUUUU");
+                      return Text("Loading projects...");
 
-                    List<Widget> shit = [];
+                    List<Widget> projectWidgets = [];
 
-                    for (DocumentSnapshot project in snapshot.data!.docs)
-                    {
-                      shit.add(GestureDetector(
-                        onTap: ()
-                        {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context)
-                              {
-                                return Tasks(project);
-                              }
-                            )
-                          );
-                        },
+                    for (DocumentSnapshot project in snapshot.data!.docs) {
+                      projectWidgets.add(
+                        FutureBuilder(
+                          future: FirebaseFirestore.instance
+                                    .collection("tasks")
+                                    .where(
+                                      "userId",
+                                      isEqualTo: FirebaseAuth.instance.currentUser!.uid,
+                                    )
+                                    .where(
+                                      "projectId",
+                                      isEqualTo: project.id
+                                    )
+                                    .count()
+                                    .get(),
 
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            bottom: 10,
-                          ),
+                          builder: (context, taskCountSnapshot) {
+                            int? taskCount = 0;
 
-                          child: Card(
-                            color: Colors.white,
-                            shadowColor: Colors.orange,
+                            if (taskCountSnapshot.hasData)
+                              taskCount = taskCountSnapshot.data!.count;
 
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return Tasks(project);
+                                    },
+                                  ),
+                                );
+                              },
 
-                            child: ListTile(
-                              title: Text(
-                                project["name"],
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                  bottom: 10,
                                 ),
-                              ),
 
-                              // Action buttons
-                              trailing: Expanded(
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
+                                child: Card(
+                                  color: Colors.white,
+                                  shadowColor: Colors.orange,
 
-                                  spacing: 5,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
 
-                                  children: [
-                                    // Edit button
-                                    GestureDetector(
-                                      onTap: ()
-                                      {
-                                        showDialog(
-                                          context: context,
+                                  child: ListTile(
+                                    title: Text(
+                                      project["name"],
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
 
-                                          builder: (context)
+                                    subtitle: Text("Tasks: $taskCount"),
+
+                                    trailing: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        // Edit button
+                                        GestureDetector(
+                                          onTap: ()
                                           {
-                                            _controllerEditProjectName.text = project["name"];
+                                            showDialog(
+                                              context: context,
+                                              builder: (context)
+                                              {
+                                                _controllerEditProjectName.text = project["name"];
 
-                                            return Dialog(
-                                              child: Padding(
-                                                padding: EdgeInsets.all(20),
-
-                                                child: Form(
-                                                  key: _editFormKey,
-
-                                                  child: Column(
-                                                    mainAxisSize: MainAxisSize.min,
-
-                                                    spacing: 10,
-
-                                                    children: [
-                                                      // Project name input
-                                                      TextFormField(
-                                                        controller: _controllerEditProjectName,
-
-                                                        decoration: InputDecoration(
-                                                          hintText: "Enter the new project name",
-                                                        ),
-
-                                                        validator: (value)
-                                                        {
-                                                          if (value == null || value.isEmpty)
-                                                          {
-                                                            return "Please enter the new project name";
-                                                          }
-
-                                                          return null;
-                                                        },
-                                                      ),
-
-                                                      // Action buttons
-                                                      Row(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-
-                                                        spacing: 10,
-
+                                                return Dialog(
+                                                  child: Padding(
+                                                    padding: EdgeInsets.all(20),
+                                                    child: Form(
+                                                      key: _editFormKey,
+                                                      child: Column(
+                                                        mainAxisSize:
+                                                        MainAxisSize.min,
                                                         children: [
-                                                          // Cancel button
-                                                          ElevatedButton(
-                                                            onPressed: ()
+                                                          // Project name input
+                                                          TextFormField(
+                                                            controller: _controllerEditProjectName,
+
+                                                            decoration: InputDecoration(
+                                                              hintText: "Enter the new project name",
+                                                            ),
+
+                                                            validator: (value)
                                                             {
-                                                              // Clear form
-                                                              _editFormKey.currentState?.reset();
+                                                              if (value == null || value.isEmpty)
+                                                                return "Please enter the new project name";
 
-                                                              // Remove popup
-                                                              Navigator.pop(context);
+                                                              return null;
                                                             },
-
-                                                            child: Text("Cancel"),
                                                           ),
 
-                                                          // Update button
-                                                          ElevatedButton(
-                                                            onPressed: ()
-                                                            {
-                                                              if (_editFormKey.currentState == null)
-                                                              {
-                                                                return;
-                                                              }
+                                                          SizedBox(height: 10),
 
-                                                              // Fails validation
-                                                              if (!_editFormKey.currentState!.validate())
-                                                              {
-                                                                _editFormKey.currentState!.save();
-                                                                return;
-                                                              }
+                                                          // Action buttons
+                                                          Row(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
 
-                                                              // Success -- edit project name
-                                                              FirebaseFirestore.instance
-                                                                  .collection("projects")
-                                                                  .doc(project.id)
-                                                                  .update({
-                                                                    "name": _controllerEditProjectName.text,
-                                                                  });
+                                                            children: [
+                                                              // Cancel button
+                                                              ElevatedButton(
+                                                                onPressed: ()
+                                                                {
+                                                                  _editFormKey.currentState?.reset();
 
-                                                              // Clear form
-                                                              _editFormKey.currentState?.reset();
+                                                                  Navigator.pop(context);
+                                                                },
 
-                                                              setState(() {});
+                                                                child: Text("Cancel"),
+                                                              ),
 
-                                                              // Remove popup
-                                                              Navigator.pop(context);
-                                                            },
+                                                              SizedBox(width: 10),
 
-                                                            child: Text("Update")
+                                                              // Update button
+                                                              ElevatedButton(
+                                                                onPressed: ()
+                                                                {
+                                                                  if (_editFormKey.currentState == null)
+                                                                    return;
+
+                                                                  if (!_editFormKey.currentState!.validate())
+                                                                  {
+                                                                    _editFormKey.currentState!.save();
+                                                                    return;
+                                                                  }
+
+                                                                  FirebaseFirestore.instance
+                                                                      .collection("projects")
+                                                                      .doc(project.id)
+                                                                      .update({
+                                                                        "name":
+                                                                        _controllerEditProjectName.text,
+                                                                      });
+
+                                                                  _editFormKey.currentState?.reset();
+
+                                                                  setState(() {});
+
+                                                                  Navigator.pop(context);
+                                                                },
+                                                                child: Text("Update"),
+                                                              ),
+                                                            ],
                                                           ),
                                                         ],
                                                       ),
-                                                    ],
+                                                    ),
                                                   ),
-                                                ),
-                                              ),
+                                                );
+                                              },
                                             );
-                                          }
-                                        );
-                                      },
+                                          },
 
-                                      child: Icon(
-                                        Icons.edit,
-                                      ),
+                                          child: Icon(
+                                            Icons.edit,
+                                          ),
+                                        ),
+
+                                        SizedBox(width: 5),
+                                        // Delete button
+                                        GestureDetector(
+                                          onTap: ()
+                                          {
+                                            FirebaseFirestore.instance
+                                                .collection("projects")
+                                                .doc(project.id)
+                                                .delete();
+                                          },
+                                          
+                                          child: Icon(Icons.delete),
+                                        ),
+                                      ],
                                     ),
-
-                                    // Delete button
-                                    GestureDetector(
-                                      onTap: ()
-                                      {
-                                        FirebaseFirestore.instance
-                                          .collection("projects")
-                                          .doc(project.id)
-                                          .delete();
-                                      },
-
-                                      child: Icon(
-                                        Icons.delete
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
+                            );
+                          },
                         ),
-                      ));
+                      );
                     }
 
                     return ListView(
-                      children: shit
+                      children: projectWidgets,
                     );
-                  }
-                )
+                  },
+                ),
               ),
             ],
-          ) ,
+          ),
         ),
-      ),
+      )
     );
   }
 }
