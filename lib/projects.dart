@@ -113,17 +113,13 @@ class ProjectsState extends State<Projects>
                               {
                                 if (_formKey.currentState == null)
                                 {
-                                  print("_formKey.currentState is null");
                                   return;
                                 }
 
                                 // Fails validation
                                 if (!_formKey.currentState!.validate())
                                 {
-                                  print("Failed validation");
-
                                   _formKey.currentState!.save();
-
                                   return;
                                 }
 
@@ -195,28 +191,35 @@ class ProjectsState extends State<Projects>
 
                     for (DocumentSnapshot project in snapshot.data!.docs)
                     {
-                      shit.add(Padding(
-                        padding: EdgeInsets.only(
-                          bottom: 10,
-                        ),
+                      shit.add(GestureDetector(
+                        onTap: ()
+                        {
+                          
+                        },
 
-                        child: Card(
-                          color: Colors.white,
-                          shadowColor: Colors.orange,
-
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            bottom: 10,
                           ),
 
-                          child: ListTile(
-                            title: Text(
-                              project["name"],
-                              style: TextStyle(
-                                fontSize: 20,
-                              ),
+                          child: Card(
+                            color: Colors.white,
+                            shadowColor: Colors.orange,
+
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
                             ),
 
-                            trailing: Icon(Icons.arrow_forward)
+                            child: ListTile(
+                              title: Text(
+                                project["name"],
+                                style: TextStyle(
+                                  fontSize: 20,
+                                ),
+                              ),
+
+                              trailing: Icon(Icons.arrow_forward)
+                            ),
                           ),
                         ),
                       ));
