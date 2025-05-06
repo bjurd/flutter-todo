@@ -200,7 +200,12 @@ class SignUpFormState extends State<SignUpForm>
                   {
                     if (value == null || value.isEmpty)
                     {
-                      return "Please enter a username";
+                      return "Please enter your password";
+                    }
+
+                    if (value.length < 6)
+                    {
+                      return "Password must be at least 6 characters long";
                     }
 
                     return null;
@@ -226,7 +231,12 @@ class SignUpFormState extends State<SignUpForm>
                   {
                     if (value == null || value.isEmpty)
                     {
-                      return "Please enter a username";
+                      return "Please enter your password again";
+                    }
+
+                    if (value.length < 6)
+                    {
+                      return "Password must be at least 6 characters long";
                     }
 
                     return null;
@@ -275,10 +285,35 @@ class SignUpFormState extends State<SignUpForm>
                 return;
               }
 
-              UserCredential creds = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                  email: _controllerEmail.text,
-                  password: password
-              );
+              // Attempt to create account
+              try
+              {
+                UserCredential creds = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                    email: _controllerEmail.text,
+                    password: password
+                );
+              }
+              on FirebaseAuthException catch (e)
+              {
+                showDialog(
+                  context: context,
+
+                  builder: (context)
+                  {
+                    return AlertDialog(
+                      backgroundColor: Colors.white,
+
+                      title: Center(
+                        child: Text(
+                          e.message ?? "There was an error with signing up"
+                        ),
+                      ),
+                    );
+                  }
+                );
+
+                return;
+              }
 
               // Success
               Navigator.pushNamed(
