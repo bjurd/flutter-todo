@@ -20,13 +20,12 @@ class Welcome extends StatelessWidget
             crossAxisAlignment: CrossAxisAlignment.center,
 
             children: [
-              SizedBox(height: 400),
               // Logo
-              // Image.asset(
-              //   "assets/logo.png",
-              //   width: 400,
-              //   height: 400,
-              // ),
+              Image.asset(
+                "assets/todolist.png",
+                width: 400,
+                height: 400,
+              ),
 
               // Middle text
               Flexible(
