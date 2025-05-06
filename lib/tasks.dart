@@ -1,23 +1,38 @@
-import "package:firebase_auth/firebase_auth.dart";
+
 import "package:flutter/material.dart";
+
+import "package:cloud_firestore/cloud_firestore.dart";
+import "package:firebase_auth/firebase_auth.dart";
 
 class Tasks extends StatefulWidget
 {
-  const Tasks({super.key});
+  late DocumentSnapshot project;
+
+  Tasks(DocumentSnapshot project)
+  {
+    this.project = project;
+  }
 
   @override
-  State<Tasks> createState() => _TasksState();
+  State<Tasks> createState() => TasksState(this.project);
 }
 
-class _TasksState extends State<Tasks>
+class TasksState extends State<Tasks>
 {
   final _formKey = GlobalKey<FormState>();
 
   final _controllerTaskName = TextEditingController();
   final _controllerTaskDescription = TextEditingController();
-  TextEditingController _controllerTaskDueDate = TextEditingController();
+  final TextEditingController _controllerTaskDueDate = TextEditingController();
 
   DateTime selectedDueDate = DateTime.now();
+
+  late DocumentSnapshot project;
+
+  TasksState(DocumentSnapshot project)
+  {
+    this.project = project;
+  }
 
   void dueDateSelector(context) async
   {
@@ -48,7 +63,7 @@ class _TasksState extends State<Tasks>
   {
     return Scaffold(
       appBar: AppBar(
-        title:Text("Project Name"),
+        title:Text(project["name"]),
       ),
 
       // Add task button
@@ -110,7 +125,6 @@ class _TasksState extends State<Tasks>
                           },
                         ),
 
-
                         // Due date selection
                         Row(
                           children: [
@@ -161,20 +175,30 @@ class _TasksState extends State<Tasks>
 
                             // Add button
                             ElevatedButton(
-                                onPressed: () {
-                                  if (_formKey.currentState == null) {
-                                    print("_formKey.currentState is null");
+                                onPressed: ()
+                                {
+                                  if (_formKey.currentState == null)
+                                  {
                                     return;
                                   }
 
                                   // Fails validation
-                                  if (!_formKey.currentState!.validate()) {
-                                    print("Failed validation");
-
+                                  if (!_formKey.currentState!.validate())
+                                  {
                                     _formKey.currentState!.save();
 
                                     return;
                                   }
+
+                                  FirebaseFirestore.instance
+                                      .collection("tasks")
+                                      .add({
+                                    "projectId": this.project.id,
+                                    "name": _controllerTaskName.text,
+                                    "description": _controllerTaskDescription.text,
+                                    "date": _controllerTaskDueDate.text,
+                                    "userId": FirebaseAuth.instance.currentUser!.uid
+                                  });
 
                                   // Clear form
                                   _formKey.currentState?.reset();
@@ -212,53 +236,75 @@ class _TasksState extends State<Tasks>
             right: 20,
           ),
 
-          child: ListView.builder(
-            itemCount: 3,
+          child: StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection("tasks")
+                .where(
+                  "userId",
+                  isEqualTo: FirebaseAuth.instance.currentUser!.uid
+                ).where(
+                  "projectId",
+                  isEqualTo: this.project.id
+                ).snapshots(),
 
-            itemBuilder: (BuildContext context, int i)
+            builder: (context, snapshot)
             {
-              return Padding(
-                padding: EdgeInsets.only(
-                  bottom: 10,
-                ),
+              if (!snapshot.hasData)
+                return Text("FUCUUUUUUUU");
 
-                child: Card(
-                  color: Colors.white,
-                  shadowColor: Colors.orange,
+              List<Widget> shit = [];
 
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
+              for (DocumentSnapshot task in snapshot.data!.docs)
+              {
+                shit.add(
+                    Padding(
+                      padding: EdgeInsets.only(
+                        bottom: 10,
+                      ),
 
-                  child: ListTile(
-                    leading: TaskCheckBox(),
+                      child: Card(
+                        color: Colors.white,
+                        shadowColor: Colors.orange,
 
-                    title: Text("task name"),
-
-                    subtitle: Text("Mar 3, 2025 hh::mm::ss"),
-
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-
-                      children: [
-                        // edit button
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(Icons.edit)
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
                         ),
 
-                        // trash button
-                        IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.delete)
+                        child: ListTile(
+                          leading: TaskCheckBox(),
+
+                          title: Text(task["name"]),
+
+                          subtitle: Text(task["date"]),
+
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+
+                            children: [
+                              // edit button
+                              IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.edit)
+                              ),
+
+                              // trash button
+                              IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.delete)
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
+                      ),
+                    )
+                );
+              }
+
+              return ListView(
+                  children: shit
               );
-            },
-          ),
+            }
+          )
         ),
       ),
     );
