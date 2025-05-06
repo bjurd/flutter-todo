@@ -361,7 +361,7 @@ class ProjectsState extends State<Projects>
                                                 .doc(project.id)
                                                 .delete();
                                           },
-                                          
+
                                           child: Icon(Icons.delete),
                                         ),
                                       ],
