@@ -446,7 +446,7 @@ class LoginFormState extends State<LoginForm>
               );
 
               // Success
-              FirebaseAuth.instance.signOut();
+              // FirebaseAuth.instance.signOut();
               Navigator.pushNamedAndRemoveUntil(context, "/home", (r) => false);
               // Navigator.pushNamed(
               //     context,
