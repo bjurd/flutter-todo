@@ -73,7 +73,8 @@ class TasksState extends State<Tasks>
           showDialog(
             context: context,
 
-            builder: (context) {
+            builder: (context)
+            {
               return Dialog(
                 child: Padding(
                   padding: EdgeInsets.all(20),
@@ -99,8 +100,10 @@ class TasksState extends State<Tasks>
                             ),
                           ),
 
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
+                          validator: (value)
+                          {
+                            if (value == null || value.isEmpty)
+                            {
                               return "Please enter a task";
                             }
 
@@ -116,8 +119,10 @@ class TasksState extends State<Tasks>
                             hintText: "Enter the description for this task",
                           ),
 
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
+                          validator: (value)
+                          {
+                            if (value == null || value.isEmpty)
+                            {
                               return "Please enter a description for this task";
                             }
 
@@ -162,7 +167,8 @@ class TasksState extends State<Tasks>
                           children: [
                             // Cancel button
                             ElevatedButton(
-                              onPressed: () {
+                              onPressed: ()
+                              {
                                 // Clear form
                                 _formKey.currentState?.reset();
 
@@ -175,41 +181,41 @@ class TasksState extends State<Tasks>
 
                             // Add button
                             ElevatedButton(
-                                onPressed: ()
+                              onPressed: ()
+                              {
+                                if (_formKey.currentState == null)
                                 {
-                                  if (_formKey.currentState == null)
-                                  {
-                                    return;
-                                  }
+                                  return;
+                                }
 
-                                  // Fails validation
-                                  if (!_formKey.currentState!.validate())
-                                  {
-                                    _formKey.currentState!.save();
+                                // Fails validation
+                                if (!_formKey.currentState!.validate())
+                                {
+                                  _formKey.currentState!.save();
 
-                                    return;
-                                  }
+                                  return;
+                                }
 
-                                  FirebaseFirestore.instance
-                                      .collection("tasks")
-                                      .add({
-                                    "projectId": this.project.id,
-                                    "name": _controllerTaskName.text,
-                                    "description": _controllerTaskDescription.text,
-                                    "date": _controllerTaskDueDate.text,
-                                    "userId": FirebaseAuth.instance.currentUser!.uid
-                                  });
+                                FirebaseFirestore.instance
+                                    .collection("tasks")
+                                    .add({
+                                      "projectId": this.project.id,
+                                      "name": _controllerTaskName.text,
+                                      "description": _controllerTaskDescription.text,
+                                      "date": _controllerTaskDueDate.text,
+                                      "userId": FirebaseAuth.instance.currentUser!.uid
+                                    });
 
-                                  // Clear form
-                                  _formKey.currentState?.reset();
+                                // Clear form
+                                _formKey.currentState?.reset();
 
-                                  setState(() {});
+                                setState(() {});
 
-                                  // Remove popup
-                                  Navigator.pop(context);
-                                },
+                                // Remove popup
+                                Navigator.pop(context);
+                              },
 
-                                child: Text("Add")
+                              child: Text("Add")
                             ),
                           ],
                         ),
@@ -257,46 +263,46 @@ class TasksState extends State<Tasks>
               for (DocumentSnapshot task in snapshot.data!.docs)
               {
                 shit.add(
-                    Padding(
-                      padding: EdgeInsets.only(
-                        bottom: 10,
+                  Padding(
+                    padding: EdgeInsets.only(
+                      bottom: 10,
+                    ),
+
+                    child: Card(
+                      color: Colors.white,
+                      shadowColor: Colors.orange,
+
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
                       ),
 
-                      child: Card(
-                        color: Colors.white,
-                        shadowColor: Colors.orange,
+                      child: ListTile(
+                        leading: TaskCheckBox(),
 
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
+                        title: Text(task["name"]),
 
-                        child: ListTile(
-                          leading: TaskCheckBox(),
+                        subtitle: Text(task["date"]),
 
-                          title: Text(task["name"]),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
 
-                          subtitle: Text(task["date"]),
+                          children: [
+                            // edit button
+                            IconButton(
+                                onPressed: () {},
+                                icon: Icon(Icons.edit)
+                            ),
 
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-
-                            children: [
-                              // edit button
-                              IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(Icons.edit)
-                              ),
-
-                              // trash button
-                              IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(Icons.delete)
-                              ),
-                            ],
-                          ),
+                            // trash button
+                            IconButton(
+                                onPressed: () {},
+                                icon: Icon(Icons.delete)
+                            ),
+                          ],
                         ),
                       ),
-                    )
+                    ),
+                  )
                 );
               }
 
