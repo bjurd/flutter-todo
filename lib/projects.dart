@@ -16,8 +16,10 @@ class Projects extends StatefulWidget
 class ProjectsState extends State<Projects>
 {
   final _formKey = GlobalKey<FormState>();
+  final _editFormKey = GlobalKey<FormState>();
 
   final _controllerProjectName = TextEditingController();
+  final _controllerEditProjectName = TextEditingController();
 
   @override
   Widget build(BuildContext context)
@@ -236,8 +238,118 @@ class ProjectsState extends State<Projects>
 
                                   children: [
                                     // Edit button
-                                    Icon(
-                                      Icons.edit,
+                                    GestureDetector(
+                                      onTap: ()
+                                      {
+                                        showDialog(
+                                          context: context,
+
+                                          builder: (context)
+                                          {
+                                            _controllerEditProjectName.text = project["name"];
+
+                                            return Dialog(
+                                              child: Padding(
+                                                padding: EdgeInsets.all(20),
+
+                                                child: Form(
+                                                  key: _editFormKey,
+
+                                                  child: Column(
+                                                    mainAxisSize: MainAxisSize.min,
+
+                                                    spacing: 10,
+
+                                                    children: [
+                                                      // Project name input
+                                                      TextFormField(
+                                                        controller: _controllerEditProjectName,
+
+                                                        decoration: InputDecoration(
+                                                          hintText: "Enter the new project name",
+                                                        ),
+
+                                                        validator: (value)
+                                                        {
+                                                          if (value == null || value.isEmpty)
+                                                          {
+                                                            return "Please enter the new project name";
+                                                          }
+
+                                                          return null;
+                                                        },
+                                                      ),
+
+                                                      // Action buttons
+                                                      Row(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+
+                                                        spacing: 10,
+
+                                                        children: [
+                                                          // Cancel button
+                                                          ElevatedButton(
+                                                            onPressed: ()
+                                                            {
+                                                              // Clear form
+                                                              _editFormKey.currentState?.reset();
+
+                                                              // Remove popup
+                                                              Navigator.pop(context);
+                                                            },
+
+                                                            child: Text("Cancel"),
+                                                          ),
+
+                                                          // Update button
+                                                          ElevatedButton(
+                                                            onPressed: ()
+                                                            {
+                                                              if (_editFormKey.currentState == null)
+                                                              {
+                                                                return;
+                                                              }
+
+                                                              // Fails validation
+                                                              if (!_editFormKey.currentState!.validate())
+                                                              {
+                                                                _editFormKey.currentState!.save();
+                                                                return;
+                                                              }
+
+                                                              // Success -- edit project name
+                                                              FirebaseFirestore.instance
+                                                                  .collection("projects")
+                                                                  .doc(project.id)
+                                                                  .update({
+                                                                    "name": _controllerEditProjectName.text,
+                                                                  });
+
+                                                              // Clear form
+                                                              _editFormKey.currentState?.reset();
+
+                                                              setState(() {});
+
+                                                              // Remove popup
+                                                              Navigator.pop(context);
+                                                            },
+
+                                                            child: Text("Update")
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        );
+                                      },
+
+                                      child: Icon(
+                                        Icons.edit,
+                                      ),
                                     ),
 
                                     // Delete button
