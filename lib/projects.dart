@@ -217,7 +217,26 @@ class ProjectsState extends State<Projects>
                                 ),
                               ),
 
-                              trailing: Icon(Icons.arrow_forward)
+                              // Action buttons
+                              trailing: Expanded(
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+
+                                  spacing: 5,
+
+                                  children: [
+                                    // Edit button
+                                    Icon(
+                                      Icons.edit,
+                                    ),
+
+                                    // Delete button
+                                    Icon(
+                                      Icons.delete
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
                         ),
