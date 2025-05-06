@@ -295,7 +295,13 @@ class TasksState extends State<Tasks>
 
                             // trash button
                             IconButton(
-                                onPressed: () {},
+                                onPressed: ()
+                                {
+                                  FirebaseFirestore.instance
+                                    .collection("tasks")
+                                    .doc(task.id)
+                                    .delete();
+                                },
                                 icon: Icon(Icons.delete)
                             ),
                           ],
