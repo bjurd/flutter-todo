@@ -475,10 +475,35 @@ class LoginFormState extends State<LoginForm>
                 return;
               }
 
-              await FirebaseAuth.instance.signInWithEmailAndPassword(
-                email: _controllerEmail.text,
-                password: _controllerPassword.text
-              );
+              // Attempt to login
+              try
+              {
+                await FirebaseAuth.instance.signInWithEmailAndPassword(
+                    email: _controllerEmail.text,
+                    password: _controllerPassword.text
+                );
+              }
+              on FirebaseAuthException catch (e)
+              {
+                showDialog(
+                    context: context,
+
+                    builder: (context)
+                    {
+                      return AlertDialog(
+                        backgroundColor: Colors.white,
+
+                        title: Center(
+                          child: Text(
+                              e.message ?? "There was an error with signing up"
+                          ),
+                        ),
+                      );
+                    }
+                );
+
+                return;
+              }
 
               // Success
               // FirebaseAuth.instance.signOut();
