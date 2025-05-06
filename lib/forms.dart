@@ -1,9 +1,9 @@
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import "package:flutter/gestures.dart";
+import "package:flutter/material.dart";
 
-import 'package:todo/buttons.dart';
+import "package:todo/buttons.dart";
 
-import 'package:firebase_auth/firebase_auth.dart';
+import "package:firebase_auth/firebase_auth.dart";
 
 class FormFieldLabel extends StatelessWidget
 {
@@ -169,7 +169,7 @@ class SignUpFormState extends State<SignUpForm>
                     return "Please enter an email address";
                   }
 
-                  String pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$';
+                  String pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$";
                   RegExp regex = RegExp(pattern);
 
                   if (!regex.hasMatch(value))
@@ -348,7 +348,7 @@ class SignUpFormState extends State<SignUpForm>
                       recognizer: TapGestureRecognizer()
                         ..onTap = ()
                         {
-                          Navigator.pushNamed(context, '/login');
+                          Navigator.pushNamed(context, "/login");
                         },
                     ),
                   ],
@@ -493,12 +493,7 @@ class LoginFormState extends State<LoginForm>
               }
 
               // Success
-              // FirebaseAuth.instance.signOut();
               Navigator.pushNamedAndRemoveUntil(context, "/home", (r) => false);
-              // Navigator.pushNamed(
-              //     context,
-              //     "/home"
-              // );
             },
           ),
 
@@ -527,7 +522,7 @@ class LoginFormState extends State<LoginForm>
                       recognizer: TapGestureRecognizer()
                         ..onTap = ()
                         {
-                          Navigator.pushNamed(context, '/signup');
+                          Navigator.pushNamed(context, "/signup");
                         },
                     ),
                   ],

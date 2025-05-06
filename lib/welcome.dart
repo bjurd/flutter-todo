@@ -1,7 +1,7 @@
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import "package:flutter/gestures.dart";
+import "package:flutter/material.dart";
 
-import 'package:todo/buttons.dart';
+import "package:todo/buttons.dart";
 
 class Welcome extends StatelessWidget
 {
@@ -85,7 +85,7 @@ class Welcome extends StatelessWidget
                       // Login link
                       children: [
                         TextSpan(
-                          text: 'Login',
+                          text: "Login",
 
                           style: TextStyle(
                             decoration: TextDecoration.underline,
@@ -94,7 +94,7 @@ class Welcome extends StatelessWidget
                           recognizer: TapGestureRecognizer()
                             ..onTap = ()
                             {
-                              Navigator.pushNamed(context, '/login');
+                              Navigator.pushNamed(context, "/login");
                             },
                         ),
                       ],

@@ -1,13 +1,13 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'firebase_options.dart';
+import "package:firebase_core/firebase_core.dart";
+import "package:firebase_auth/firebase_auth.dart";
+import "firebase_options.dart";
 
-import 'package:todo/welcome.dart';
-import 'package:todo/signup.dart';
-import 'package:todo/login.dart';
-import 'package:todo/projects.dart';
+import "package:todo/welcome.dart";
+import "package:todo/signup.dart";
+import "package:todo/login.dart";
+import "package:todo/projects.dart";
 
 void main() async
 {
