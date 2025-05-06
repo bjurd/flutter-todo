@@ -19,7 +19,10 @@ class ProjectsState extends State<Projects>
   final _editFormKey = GlobalKey<FormState>();
 
   final _controllerProjectName = TextEditingController();
+  final _controllerProjectDescription = TextEditingController();
+
   final _controllerEditProjectName = TextEditingController();
+  final _controllerEditProjectDescription = TextEditingController();
 
   @override
   Widget build(BuildContext context)
@@ -88,6 +91,25 @@ class ProjectsState extends State<Projects>
                           },
                         ),
 
+                        // Project description input
+                        TextFormField(
+                          controller: _controllerProjectDescription,
+
+                          decoration: InputDecoration(
+                            hintText: "Enter the project description",
+                          ),
+
+                          validator: (value)
+                          {
+                            if (value == null || value.isEmpty)
+                            {
+                              return "Please enter a project description";
+                            }
+
+                            return null;
+                          },
+                        ),
+
                         // Action buttons
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -130,6 +152,7 @@ class ProjectsState extends State<Projects>
                                     .collection("projects")
                                     .add({
                                       "name": _controllerProjectName.text,
+                                      "description": _controllerProjectDescription.text,
                                       "userId": FirebaseAuth.instance.currentUser!.uid
                                     });
 
@@ -174,12 +197,12 @@ class ProjectsState extends State<Projects>
               Expanded(
                 child: StreamBuilder(
                   stream: FirebaseFirestore.instance
-                            .collection("projects")
-                            .where(
-                              "userId",
-                              isEqualTo: FirebaseAuth.instance.currentUser!.uid,
-                            )
-                            .snapshots(),
+                    .collection("projects")
+                    .where(
+                      "userId",
+                      isEqualTo: FirebaseAuth.instance.currentUser!.uid,
+                    )
+                    .snapshots(),
 
                   builder: (context, snapshot)
                   {
@@ -192,19 +215,20 @@ class ProjectsState extends State<Projects>
                       projectWidgets.add(
                         FutureBuilder(
                           future: FirebaseFirestore.instance
-                                    .collection("tasks")
-                                    .where(
-                                      "userId",
-                                      isEqualTo: FirebaseAuth.instance.currentUser!.uid,
-                                    )
-                                    .where(
-                                      "projectId",
-                                      isEqualTo: project.id
-                                    )
-                                    .count()
-                                    .get(),
+                            .collection("tasks")
+                            .where(
+                              "userId",
+                              isEqualTo: FirebaseAuth.instance.currentUser!.uid,
+                            )
+                            .where(
+                              "projectId",
+                              isEqualTo: project.id
+                            )
+                            .count()
+                            .get(),
 
-                          builder: (context, taskCountSnapshot) {
+                          builder: (context, taskCountSnapshot)
+                          {
                             int? taskCount = 0;
 
                             if (taskCountSnapshot.hasData)
@@ -258,6 +282,7 @@ class ProjectsState extends State<Projects>
                                               builder: (context)
                                               {
                                                 _controllerEditProjectName.text = project["name"];
+                                                _controllerEditProjectDescription.text = project["description"];
 
                                                 return Dialog(
                                                   child: Padding(
@@ -280,6 +305,23 @@ class ProjectsState extends State<Projects>
                                                             {
                                                               if (value == null || value.isEmpty)
                                                                 return "Please enter the new project name";
+
+                                                              return null;
+                                                            },
+                                                          ),
+
+                                                          // Project description input
+                                                          TextFormField(
+                                                            controller: _controllerEditProjectDescription,
+
+                                                            decoration: InputDecoration(
+                                                              hintText: "Enter the new project description",
+                                                            ),
+
+                                                            validator: (value)
+                                                            {
+                                                              if (value == null || value.isEmpty)
+                                                                return "Please enter the new project description";
 
                                                               return null;
                                                             },
@@ -320,12 +362,12 @@ class ProjectsState extends State<Projects>
                                                                   }
 
                                                                   FirebaseFirestore.instance
-                                                                      .collection("projects")
-                                                                      .doc(project.id)
-                                                                      .update({
-                                                                        "name":
-                                                                        _controllerEditProjectName.text,
-                                                                      });
+                                                                    .collection("projects")
+                                                                    .doc(project.id)
+                                                                    .update({
+                                                                      "name": _controllerEditProjectName.text,
+                                                                      "description": _controllerEditProjectDescription.text,
+                                                                    });
 
                                                                   _editFormKey.currentState?.reset();
 
