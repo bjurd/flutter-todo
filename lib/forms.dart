@@ -439,19 +439,6 @@ class LoginFormState extends State<LoginForm>
 
                     return null;
                   }
-              ),
-
-              // Forget Password
-              Container(
-                width: double.infinity,
-
-                margin: EdgeInsets.only(top: 10.0),
-
-                child: Text(
-                  "Forget Password?",
-
-                  textAlign: TextAlign.right,
-                ),
               )
             ],
           ),
