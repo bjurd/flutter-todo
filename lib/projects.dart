@@ -192,7 +192,7 @@ class ProjectsState extends State<Projects>
                       shit.add(GestureDetector(
                         onTap: ()
                         {
-                          
+
                         },
 
                         child: Padding(
@@ -212,7 +212,8 @@ class ProjectsState extends State<Projects>
                               title: Text(
                                 project["name"],
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
 
