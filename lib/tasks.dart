@@ -25,6 +25,11 @@ class TasksState extends State<Tasks>
   final _controllerTaskDescription = TextEditingController();
   final TextEditingController _controllerTaskDueDate = TextEditingController();
 
+  final _editFormKey = GlobalKey<FormState>();
+  final _controllerEditTaskName = TextEditingController();
+  final _controllerEditTaskDescription = TextEditingController();
+  final _controllerEditTaskDueDate = TextEditingController();
+
   DateTime selectedDueDate = DateTime.now();
 
   late DocumentSnapshot project;
@@ -34,7 +39,7 @@ class TasksState extends State<Tasks>
     this.project = project;
   }
 
-  void dueDateSelector(context) async
+  void dueDateSelector(context, TextEditingController controller) async
   {
     // Set up date picker
     final DateTime? datePicked = await showDatePicker(
@@ -55,7 +60,7 @@ class TasksState extends State<Tasks>
     selectedDueDate = datePicked;
 
     // Update controller value
-    _controllerTaskDueDate.text = "${datePicked.month}/${datePicked.day}/${datePicked.year}";
+    controller.text = datePicked.toString();
   }
 
   @override
@@ -152,7 +157,7 @@ class TasksState extends State<Tasks>
                               icon: Icon(Icons.calendar_today),
                               onPressed: ()
                               {
-                                dueDateSelector(context);
+                                dueDateSelector(context, _controllerTaskDueDate);
                               },
                             ),
                           ],
@@ -203,6 +208,7 @@ class TasksState extends State<Tasks>
                                       "name": _controllerTaskName.text,
                                       "description": _controllerTaskDescription.text,
                                       "date": _controllerTaskDueDate.text,
+                                      "completed": false,
                                       "userId": FirebaseAuth.instance.currentUser!.uid
                                     });
 
@@ -289,8 +295,165 @@ class TasksState extends State<Tasks>
                           children: [
                             // edit button
                             IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.edit)
+                              onPressed: ()
+                              {
+                                showDialog(
+                                  context: context,
+
+                                  builder: (context)
+                                  {
+                                    _controllerEditTaskName.text = task["name"];
+                                    _controllerEditTaskDescription.text = task["description"];
+                                    _controllerEditTaskDueDate.text = task["date"];
+
+                                    return Dialog(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(20),
+
+                                        child: Form(
+                                          key: _editFormKey,
+
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+
+                                            spacing: 10,
+
+                                            children: [
+                                              // Task name input
+                                              TextFormField(
+                                                controller: _controllerEditTaskName,
+
+                                                decoration: InputDecoration(
+                                                  hintText: "Enter the new task name",
+                                                ),
+
+                                                validator: (value)
+                                                {
+                                                  if (value == null || value.isEmpty)
+                                                  {
+                                                    return "Please enter the new task name";
+                                                  }
+
+                                                  return null;
+                                                },
+                                              ),
+
+                                              // Task description input
+                                              TextFormField(
+                                                controller: _controllerEditTaskDescription,
+
+                                                decoration: InputDecoration(
+                                                  hintText: "Enter the new description",
+                                                ),
+
+                                                validator: (value)
+                                                {
+                                                  if (value == null || value.isEmpty)
+                                                  {
+                                                    return "Please enter the new task description";
+                                                  }
+
+                                                  return null;
+                                                },
+                                              ),
+
+                                              // Due date selection
+                                              Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: TextFormField(
+                                                      controller: _controllerEditTaskDueDate,
+
+                                                      decoration: InputDecoration(
+                                                          hintText: "Select the due date"
+                                                      ),
+
+                                                      keyboardType: TextInputType.datetime,
+
+                                                      // validator: (value) {},
+                                                    ),
+                                                  ),
+
+                                                  // Select date button
+                                                  IconButton(
+                                                    icon: Icon(Icons.calendar_today),
+                                                    onPressed: ()
+                                                    {
+                                                      dueDateSelector(context, _controllerEditTaskDueDate);
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+
+                                              // Action buttons
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+
+                                                spacing: 10,
+
+                                                children: [
+                                                  // Cancel button
+                                                  ElevatedButton(
+                                                    onPressed: ()
+                                                    {
+                                                      // Clear form
+                                                      _editFormKey.currentState?.reset();
+
+                                                      // Remove popup
+                                                      Navigator.pop(context);
+                                                    },
+
+                                                    child: Text("Cancel"),
+                                                  ),
+
+                                                  // Update button
+                                                  ElevatedButton(
+                                                    onPressed: ()
+                                                    {
+                                                      if (_editFormKey.currentState == null)
+                                                      {
+                                                        return;
+                                                      }
+
+                                                      // Fails validation
+                                                      if (!_editFormKey.currentState!.validate())
+                                                      {
+                                                        _editFormKey.currentState!.save();
+                                                        return;
+                                                      }
+
+                                                      // Success -- edit task
+                                                      FirebaseFirestore.instance
+                                                        .collection("tasks")
+                                                        .doc(task.id)
+                                                        .update({
+                                                          "name": _controllerEditTaskName.text,
+                                                          "description": _controllerEditTaskDescription.text,
+                                                          "date": _controllerEditTaskDueDate.text,
+                                                        });
+
+                                                      // Clear form
+                                                      _editFormKey.currentState?.reset();
+
+                                                      setState(() {});
+
+                                                      // Remove popup
+                                                      Navigator.pop(context);
+                                                    },
+
+                                                    child: Text("Update")
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                );
+                              },
+                              icon: Icon(Icons.edit)
                             ),
 
                             // trash button
